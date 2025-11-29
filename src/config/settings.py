@@ -21,7 +21,11 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "your-default-secret-key"
 
     # Database settings
-    DATABASE_URL: str = "sqlite:///db.sqlite3"
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=db
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
 
     # API settings
     API_PREFIX: str = "/api"

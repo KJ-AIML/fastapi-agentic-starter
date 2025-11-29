@@ -1,10 +1,9 @@
-from langgraph.prebuilt.chat_agent_executor import AgentExecutor
 from src.config.logs_config import get_logger
 
 logger = get_logger(__name__)
 
 class SampleAction:
-    def __init__(self, agent: AgentExecutor):
+    def __init__(self, agent):
         self.agent = agent
 
     async def execute(self, query: str) -> str:
