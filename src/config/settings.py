@@ -21,11 +21,11 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "your-default-secret-key"
 
     # Database settings
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=db
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
+    DATABASE_HOST: str = "localhost"
+    DATABASE_PORT: int = 5432
+    DATABASE_NAME: str = "db"
+    DATABASE_USER: str = "postgres"
+    DATABASE_PASSWORD: str = "postgres"
 
     # API settings
     API_PREFIX: str = "/api"
