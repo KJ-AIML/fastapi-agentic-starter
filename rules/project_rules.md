@@ -1,6 +1,7 @@
-#Repository Guidelines
+# Repository Guidelines
 
 ## Project Structure & Module Organization
+
 - The project should follow the [FastAPI Hexagonal Agentic Structure] That I created and modify
 - The project should have a `src` directory at the root level
 - The `src` directory should have the following subdirectories:
@@ -8,9 +9,11 @@
     - `endpoints`: Contains the API endpoint definitions (grouped by version)
       - Each version (v1, v2, etc.) has its own `dependencies.py` for version-specific DI
     - `router`: Contains router aggregation and version prefix management
+    - `middlewares`: Contains global middlewares (error handling, logging)
   - `execution`: Contains the business logic and execution code (equivalent to services layer)
-    - `usecases`: Contains the usecases code for executing actions 
+    - `usecases`: Contains the usecases code for executing actions
     - `actions`: Contains the actions code implementations
+  - `core`: Contains shared core logic (custom exceptions, base schemas)
   - `agents`: Contains AI agent management
     - `agent_manager`: Contains agent definitions
     - `prompts`: Contains agent prompts
@@ -21,12 +24,13 @@
     - `cache`: Contains cache providers
     - `vectordb`: Contains vector database providers
   - `database`: Contains database layer
-    - `migrations`: Contains database migrations
     - `repositories`: Contains data repositories
   - `config`: Contains configuration files
+  - `tests`: Contains automated tests
   - `utils`: Contains utility functions and helpers
 
 ## Build, Test, and Development Commands
+
 - `uv run -m src.api.main` to run the FastAPI application
 - `uv run -m tests.test_main` to run the tests
 - `uv run -m src.utils.helpers` to run the utility functions
@@ -34,6 +38,7 @@
 - `uv sync` to sync the project with the `uv.lock` file
 
 ## Coding Style & Naming Conventions
+
 - Language: Python
 - Code Style: [PEP 8]
 - Naming Conventions:

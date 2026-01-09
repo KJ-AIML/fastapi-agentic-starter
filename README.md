@@ -1,4 +1,5 @@
 # FastAPI-Agentic-Starter
+>
 > **The AI-First Backend for Scalable, Intelligent Applications.**
 
 <p align="center">
@@ -6,6 +7,7 @@
 </p>
 
 ## Introduction
+
 **FastAPI-Agentic-Starter** is a production-ready boilerplate designed for building robust, AI-powered backends. Built with a "AI-First" philosophy, it combines the performance of FastAPI with a modular architecture that treats LLM interactions as first-class citizens. Whether you're building autonomous agents, RAG pipelines, or intelligent APIs, this starter kit provides the scalability and clean code structure you need to move fast.
 
 ## Key Features
@@ -26,24 +28,22 @@ src/
 ├── api/                    # Interface Layer - FastAPI application code
 │   ├── endpoints/          # API endpoint definitions (grouped by version)
 │   │   └── v1/             # Version 1 endpoints with its own dependencies.py
+│   ├── middlewares/        # Global middlewares (logging, error handling)
 │   └── router/             # Router aggregation and version prefix management
 ├── execution/              # Application Layer - Business logic (equivalent to services)
 │   ├── usecases/           # Use case code for executing actions
 │   └── actions/            # Action code implementations
+├── core/                   # Shared Core Layer - Exceptions, base models
 ├── agents/                 # AI Agent Management
 │   ├── agent_manager/      # Agent definitions
 │   ├── prompts/            # Agent prompts
 │   ├── tools/              # Agent tools
 │   └── workflows/          # Agent workflows
 ├── providers/              # Infrastructure Layer - External service providers
-│   ├── ai/                 # AI model providers
-│   ├── cache/              # Cache providers
-│   └── vectordb/           # Vector database providers
 ├── database/               # Database Layer
-│   ├── migrations/         # Database migrations
-│   └── repositories/       # Data repositories
+│   ├── repositories/       # Data repositories
 ├── config/                 # Configuration files
-└── utils/                  # Utility functions and helpers
+└── tests/                  # Automated Tests
 ```
 
 ## Architecture Flow
@@ -71,6 +71,7 @@ Request → API Endpoints → Use Cases → Actions → Agents → Response
 Follow these steps to get your AI backend up and running.
 
 1. **Clone the Repository**
+
     ```bash
     git clone https://github.com/KJ-AIML/fastapi-agentic-starter.git
     cd fastapi-agentic-starter
@@ -78,22 +79,25 @@ Follow these steps to get your AI backend up and running.
 
 2. **Configure Environment**
     Copy the example environment file and configure your secrets.
+
     ```bash
     cp .env.example .env
     ```
 
 3. **Install Dependencies**
     Using `uv` (recommended):
+
     ```bash
     uv sync
     ```
 
 4. **Run the Application**
     Start the development server with hot-reloading.
+
     ```bash
     uv run -m src.api.main
     ```
-    
+
     Access the API documentation at `http://localhost:3000/docs`.
 
 ## Development Commands
@@ -103,7 +107,7 @@ Follow these steps to get your AI backend up and running.
 uv run -m src.api.main
 
 # Run tests
-uv run -m tests.test_main
+uv run pytest src/tests
 
 # Run utility functions
 uv run -m src.utils.helpers

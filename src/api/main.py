@@ -1,11 +1,15 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from src.config.settings import settings
-from src.config.logs_config import get_logger
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.endpoints.router.routers import api_router
+from src.api.middlewares.error_handler import ErrorHandlerMiddleware
+from src.api.middlewares.logging import LoggingMiddleware
+from src.api.middlewares.security import APIKeyMiddleware
+from src.api.router.routers import api_router
+from src.config.logs_config import get_logger
+from src.config.settings import settings
 
 logger = get_logger(__name__)
 
@@ -43,6 +47,12 @@ def create_app() -> FastAPI:
     # Include API router
     app.include_router(api_router, prefix=settings.API_PREFIX)
 
+    # Register Middlewares
+
+    app.add_middleware(ErrorHandlerMiddleware)
+    app.add_middleware(APIKeyMiddleware)
+    app.add_middleware(LoggingMiddleware)
+
     # Health check endpoint
     @app.get("/")
     async def check():
@@ -59,12 +69,11 @@ def create_app() -> FastAPI:
 app = create_app()
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run(
         "src.api.main:app",
         host=settings.SERVER_HOST,
         port=settings.SERVER_PORT,
         log_level=settings.LOG_LEVEL,
         reload=settings.DEBUG,
+        access_log=False,
     )

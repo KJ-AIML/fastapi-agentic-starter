@@ -7,8 +7,29 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
+env/
+venv/
+ENV/
 
+# Configuration
 .env
+.python-version
 
+# Logs
+logs/
+*.log
+src/logs/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
 .trae/
+
+# Docker
+.docker/

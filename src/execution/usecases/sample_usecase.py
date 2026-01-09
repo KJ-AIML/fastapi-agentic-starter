@@ -1,7 +1,8 @@
-from src.execution.actions.sample_action import SampleAction
 from src.config.logs_config import get_logger
+from src.execution.actions.sample_action import SampleAction
 
 logger = get_logger(__name__)
+
 
 class SampleUseCase:
     def __init__(self, action: SampleAction):

@@ -1,5 +1,7 @@
+import logging
 from pathlib import Path
 from typing import List
+
 from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -52,9 +54,21 @@ class Settings(BaseSettings):
     # Allowed hosts
     ALLOWED_HOSTS: List[str] = ["*"]
 
+    # Security settings
+    X_API_KEY: str | None = "your-api-key-here"
+
+    @property
+    def is_production(self) -> bool:
+        return not self.DEBUG
+
     class Config:
         env_file = BASE_DIR / ".env"
         case_sensitive = True
 
 
 settings = Settings()
+
+# Post-initialization validation
+if not settings.DEBUG and not settings.OPENAI_API_KEY:
+    logger = logging.getLogger(__name__)
+    logger.warning("OPENAI_API_KEY is not set in production mode!")

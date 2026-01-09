@@ -8,17 +8,19 @@ from src.execution.usecases.sample_usecase import SampleUseCase
 router = APIRouter()
 logger = get_logger(__name__)
 
-@router.post("/sample-di", response_model=SampleQueryResponse, status_code=status.HTTP_200_OK)
+
+@router.post(
+    "/sample-di", response_model=SampleQueryResponse, status_code=status.HTTP_200_OK
+)
 async def sample_di_endpoint(
-    request: SampleQueryRequest,
-    usecase: SampleUseCase = Depends(get_sample_usecase)
+    request: SampleQueryRequest, usecase: SampleUseCase = Depends(get_sample_usecase)
 ):
     """
     Sample endpoint demonstrating Dependency Injection flow:
     Endpoint -> UseCase -> Action -> Agent
     """
     logger.info(f"Received sample DI request: {request.query}")
-    
+
     response_content = await usecase.execute(request.query)
 
     return SampleQueryResponse(response=response_content)

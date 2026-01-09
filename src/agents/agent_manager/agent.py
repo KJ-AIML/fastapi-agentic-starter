@@ -1,7 +1,7 @@
 from langgraph.prebuilt import create_react_agent
 
-from src.providers.ai.langchain_model_loader import LangchainModelLoader
 from src.agents.prompts.sample_agent_prompt import get_prompt_sample_agent
+from src.providers.ai.langchain_model_loader import LangchainModelLoader
 
 loader = LangchainModelLoader()
 
