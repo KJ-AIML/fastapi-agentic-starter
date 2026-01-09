@@ -98,7 +98,7 @@ Follow these steps to get your AI backend up and running.
     uv run -m src.api.main
     ```
 
-    Access the API documentation at `http://localhost:3000/docs`.
+    Access the API documentation (powered by **Scalar**) at `http://localhost:3000/docs`.
 
 ## Development Commands
 

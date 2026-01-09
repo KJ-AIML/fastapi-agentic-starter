@@ -1,5 +1,5 @@
 # Use a slim Python base image
-FROM python:3.11-slim-bookworm AS builder
+FROM python:3.13-slim AS builder
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -14,7 +14,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 # Final stage
-FROM python:3.11-slim-bookworm
+FROM python:3.13-slim
 
 WORKDIR /app
 

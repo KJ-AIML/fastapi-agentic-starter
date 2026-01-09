@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from scalar_fastapi import get_scalar_api_reference
 
 from src.api.middlewares.error_handler import ErrorHandlerMiddleware
 from src.api.middlewares.logging import LoggingMiddleware
@@ -32,7 +33,9 @@ def create_app() -> FastAPI:
         description="Backend API for FastAPI Agentic Starter",
         version="1.0.0",
         lifespan=lifespan,
-        docs_url="/docs",
+        docs_url=None,  # Disable default Swagger UI
+        redoc_url=None,  # Disable ReDoc
+        openapi_url="/openapi.json",  # Keep OpenAPI JSON endpoint
     )
 
     # Configure CORS
@@ -60,6 +63,14 @@ def create_app() -> FastAPI:
             "status": "healthy",
             "service": "FastAPI Agentic Starter",
         }
+
+    # Scalar API Documentation
+    @app.get("/docs", include_in_schema=False)
+    async def scalar_html():
+        return get_scalar_api_reference(
+            openapi_url=app.openapi_url,
+            title=app.title,
+        )
 
     logger.info("FastAPI application configured successfully")
     return app
