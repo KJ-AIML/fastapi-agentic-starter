@@ -20,6 +20,7 @@ Whether you're building autonomous agents, RAG pipelines, or intelligent APIs, t
 - ⚡ **Async-Ready**: Full async/await support with FastAPI and asyncpg
 - 🧪 **Testing Ready**: pytest setup with fixtures and organized test structure
 - 📚 **Modern Documentation**: Scalar API docs for beautiful interactive documentation
+- 📈 **Built-in Observability**: OpenTelemetry tracing + Prometheus metrics (AI, DB, Cache monitoring)
 
 ## ALMS Architecture
 
@@ -96,6 +97,7 @@ fastapi-agentic-starter/
 │   │   ├── endpoints/v1/         # Versioned endpoints
 │   │   │   ├── dependencies.py   # DI for v1
 │   │   │   ├── health.py         # Health check endpoint
+│   │   │   ├── metrics.py        # Prometheus metrics endpoint
 │   │   │   ├── sample_agent.py   # Agent endpoint example
 │   │   │   ├── sample_di.py      # DI example
 │   │   │   └── schemas/          # Pydantic schemas
@@ -104,6 +106,7 @@ fastapi-agentic-starter/
 │   │   ├── middlewares/          # Global middlewares
 │   │   │   ├── error_handler.py  # Exception handling
 │   │   │   ├── logging.py        # Request logging
+│   │   │   ├── observability.py  # Metrics & tracing middleware
 │   │   │   └── security.py       # Security headers
 │   │   ├── router/               # Router aggregation
 │   │   │   └── routers.py        # Main API router
@@ -123,6 +126,10 @@ fastapi-agentic-starter/
 │   ├── providers/                # Infrastructure Providers
 │   │   └── ai/
 │   │       └── langchain_model_loader.py
+│   ├── observability/            # Observability Layer
+│   │   ├── __init__.py           # Module exports
+│   │   ├── tracing.py            # OpenTelemetry tracing
+│   │   └── metrics.py            # Prometheus metrics
 │   ├── database/                 # Database Layer
 │   │   ├── connection.py         # DB connection setup
 │   │   ├── migrations/           # Alembic migrations
@@ -162,6 +169,7 @@ fastapi-agentic-starter/
 | **Caching** | [Redis](https://redis.io/) | Caching & message broker |
 | **Validation** | [Pydantic v2](https://docs.pydantic.dev/) | Data validation & settings |
 | **Documentation** | [Scalar](https://scalar.com/) | Modern API documentation |
+| **Observability** | [OpenTelemetry](https://opentelemetry.io/) + [Prometheus](https://prometheus.io/) | Distributed tracing & metrics |
 | **Testing** | [pytest](https://docs.pytest.org/) | Testing framework |
 | **Linting** | [Ruff](https://docs.astral.sh/ruff/) | Fast Python linter |
 | **Package Manager** | [uv](https://docs.astral.sh/uv/) | Modern Python package manager |
@@ -186,7 +194,7 @@ cp .env.example .env
 
 # Edit .env with your credentials
 # Required: OPENAI_API_KEY
-# Optional: DATABASE_URL, REDIS_URL
+# Optional: DATABASE_URL, REDIS_URL, OTLP_ENDPOINT
 ```
 
 ### 2. Install Dependencies
@@ -406,6 +414,11 @@ DATABASE_PASSWORD=secret
 REDIS_HOST=localhost
 REDIS_PORT=6379
 
+# Observability (Optional)
+OTLP_ENDPOINT=http://localhost:4317
+METRICS_ENABLED=true
+TRACING_ENABLED=true
+
 DEBUG=true
 LOG_LEVEL=info
 SERVER_PORT=3000
@@ -419,6 +432,57 @@ from src.config.settings import settings
 # Use settings
 api_key = settings.OPENAI_API_KEY
 db_url = settings.DATABASE_URL
+```
+
+## Observability
+
+ALMS includes built-in observability with OpenTelemetry and Prometheus:
+
+### Features
+
+- **Distributed Tracing**: Track requests across all layers with OpenTelemetry
+- **Metrics Collection**: Prometheus-compatible metrics for monitoring
+- **AI Monitoring**: Track LLM token usage, latency, and costs
+- **Database Metrics**: Query performance and connection pool monitoring
+- **Cache Analytics**: Hit/miss ratios and operation latency
+
+### Available Metrics
+
+Access metrics at: `http://localhost:3000/api/v1/metrics`
+
+| Metric | Description |
+|--------|-------------|
+| `http_requests_total` | HTTP requests by method, endpoint, status |
+| `db_queries_total` | Database queries by operation |
+| `cache_hits_total` & `cache_misses_total` | Cache performance |
+| `ai_tokens_total` | LLM token usage |
+| `ai_request_duration_seconds` | AI API latency |
+| `agent_executions_total` | Agent executions by type |
+
+### Configuration
+
+```env
+# OpenTelemetry tracing
+OTLP_ENDPOINT=http://localhost:4317  # Optional: Send traces to collector
+TRACING_ENABLED=true                  # Enable/disable tracing
+
+# Prometheus metrics
+METRICS_ENABLED=true                  # Enable/disable metrics
+```
+
+### Using Custom Metrics
+
+```python
+from src.observability.metrics import metrics
+from src.observability.tracing import tracer
+
+# Record custom metric
+metrics.counter("my_event_total", {"type": "example"})
+
+# Create custom span
+with tracer.start_as_current_span("my_operation") as span:
+    span.set_attribute("custom.attribute", value)
+    result = do_work()
 ```
 
 ## Creating a New Agent

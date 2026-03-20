@@ -57,6 +57,11 @@ class Settings(BaseSettings):
     # Security settings
     X_API_KEY: str | None = "your-api-key-here"
 
+    # Observability settings
+    OTLP_ENDPOINT: str | None = None  # e.g., "http://localhost:4317" for Jaeger/Tempo
+    METRICS_ENABLED: bool = True
+    TRACING_ENABLED: bool = True
+
     @property
     def is_production(self) -> bool:
         return not self.DEBUG

@@ -1,7 +1,7 @@
 # 06 - API Documentation
 
 > **Last Updated:** March 20, 2026  
-> **Version:** 0.1.0  
+> **Version:** 0.2.0  
 > **Status:** ✅ Active
 
 ## Base URL
@@ -112,6 +112,63 @@ curl -X POST http://localhost:3000/api/v1/agent \
 **Error Responses:**
 - `400` - Validation error (missing query)
 - `500` - Agent execution error
+
+## Metrics Endpoint
+
+### GET /api/v1/metrics
+
+Prometheus-compatible metrics endpoint for observability and monitoring.
+
+**Request:**
+```bash
+curl http://localhost:3000/api/v1/metrics
+```
+
+**Response:**
+```text
+# HELP http_requests_total Total HTTP requests
+# TYPE http_requests_total counter
+http_requests_total{method="GET",endpoint="/api/v1/health",status="200"} 42
+
+# HELP http_request_duration_seconds HTTP request duration
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.1",method="GET",endpoint="/api/v1/health"} 40
+http_request_duration_seconds_sum{method="GET",endpoint="/api/v1/health"} 1.234
+http_request_duration_seconds_count{method="GET",endpoint="/api/v1/health"} 42
+
+# HELP db_queries_total Total database queries
+# TYPE db_queries_total counter
+db_queries_total{operation="SELECT",table="users"} 156
+
+# HELP cache_hits_total Total cache hits
+# TYPE cache_hits_total counter
+cache_hits_total{operation="get"} 89
+```
+
+**Metrics Available:**
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `http_requests_total` | Counter | Total HTTP requests by method, endpoint, status |
+| `http_request_duration_seconds` | Histogram | Request latency distribution |
+| `db_queries_total` | Counter | Database queries by operation and table |
+| `db_query_duration_seconds` | Histogram | Database query latency |
+| `cache_operations_total` | Counter | Cache operations by type (get/set/delete) |
+| `cache_hits_total` | Counter | Cache hit count |
+| `cache_misses_total` | Counter | Cache miss count |
+| `ai_requests_total` | Counter | AI/LLM API calls by model |
+| `ai_tokens_total` | Counter | Token usage by type (input/output) |
+| `ai_request_duration_seconds` | Histogram | AI API call latency |
+| `agent_executions_total` | Counter | Agent executions by type |
+| `agent_execution_duration_seconds` | Histogram | Agent execution time |
+
+**Environment Variables:**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `METRICS_ENABLED` | Enable metrics collection | `true` |
+| `TRACING_ENABLED` | Enable distributed tracing | `true` |
+| `OTLP_ENDPOINT` | OpenTelemetry collector endpoint | - |
 
 ## Sample Endpoints
 
@@ -323,4 +380,4 @@ Real-time communication for streaming agent responses:
 ws://localhost:3000/ws/agent
 ```
 
-**Updated:** v0.1.0 - Initial API documentation with health, agent, and sample endpoints
+**Updated:** v0.2.0 - Added Prometheus metrics endpoint for observability

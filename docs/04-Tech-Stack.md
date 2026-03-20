@@ -1,7 +1,7 @@
 # 04 - Tech Stack
 
 > **Last Updated:** March 20, 2026  
-> **Version:** 0.1.0  
+> **Version:** 0.2.0  
 > **Status:** ✅ Active
 
 ## Core Framework
@@ -34,6 +34,18 @@
 | **asyncpg** | 0.31.0+ | Async PostgreSQL driver |
 | **Alembic** | 1.17.2+ | Database migrations |
 | **Redis** | 7.1.0+ | Caching and message broker |
+
+## Observability
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **OpenTelemetry API** | 1.25.0+ | Distributed tracing API |
+| **OpenTelemetry SDK** | 1.25.0+ | Tracing implementation |
+| **OpenTelemetry FastAPI** | 0.46b0+ | FastAPI auto-instrumentation |
+| **OpenTelemetry SQLAlchemy** | 0.46b0+ | Database query tracing |
+| **OpenTelemetry Redis** | 0.46b0+ | Cache operation tracing |
+| **OpenTelemetry OTLP** | 1.25.0+ | Trace export protocol |
+| **Prometheus Client** | 0.20.0+ | Metrics collection |
 
 ## Documentation
 
@@ -95,6 +107,13 @@ dependencies = [
     "langchain-openai>=1.1.0",
     "langgraph>=1.0.4",
     "openai>=2.8.1",
+    "opentelemetry-api>=1.25.0",
+    "opentelemetry-sdk>=1.25.0",
+    "opentelemetry-instrumentation-fastapi>=0.46b0",
+    "opentelemetry-instrumentation-sqlalchemy>=0.46b0",
+    "opentelemetry-instrumentation-redis>=0.46b0",
+    "opentelemetry-exporter-otlp>=1.25.0",
+    "prometheus-client>=0.20.0",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "redis>=7.1.0",
@@ -155,6 +174,21 @@ dev = [
 - **Simplicity:** Simple API, easy to integrate
 - **Production Ready:** Battle-tested at scale
 
+### Why OpenTelemetry?
+
+- **Vendor Neutral:** Avoid vendor lock-in, works with any backend
+- **Standards Based:** CNCF project with broad industry adoption
+- **Auto-Instrumentation:** Minimal code changes required
+- **Distributed Tracing:** Follow requests across services
+- **AI Monitoring:** Track LLM calls with token usage and costs
+
+### Why Prometheus?
+
+- **Industry Standard:** De facto standard for metrics in cloud-native
+- **Pull Model:** Simple HTTP endpoint for metric collection
+- **Rich Ecosystem:** Grafana, Alertmanager integration
+- **Performance:** Minimal overhead on application
+
 ### Why Ruff?
 
 - **Speed:** Written in Rust, extremely fast
@@ -211,10 +245,10 @@ dev = [
 | Technology | Purpose | Status |
 |------------|---------|--------|
 | **Celery** | Distributed task queue | ⏳ Planned |
-| **Prometheus** | Metrics collection | ⏳ Planned |
+| **Prometheus** | Metrics collection | ✅ Active |
 | **Grafana** | Metrics visualization | ⏳ Planned |
 | **Sentry** | Error tracking | ⏳ Planned |
 | **MinIO** | Object storage | ❌ Under Review |
 | **Elasticsearch** | Search engine | ❌ Under Review |
 
-**Updated:** v0.1.0 - Initial tech stack with FastAPI, LangChain, PostgreSQL, and SQLAlchemy 2.0
+**Updated:** v0.2.0 - Added OpenTelemetry and Prometheus observability stack

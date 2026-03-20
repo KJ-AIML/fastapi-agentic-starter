@@ -7,10 +7,12 @@ from scalar_fastapi import get_scalar_api_reference
 
 from src.api.middlewares.error_handler import ErrorHandlerMiddleware
 from src.api.middlewares.logging import LoggingMiddleware
+from src.api.middlewares.observability import ObservabilityMiddleware
 from src.api.middlewares.security import APIKeyMiddleware
 from src.api.router.routers import api_router
 from src.config.logs_config import get_logger
 from src.config.settings import settings
+from src.observability import setup_tracing, setup_metrics, instrument_fastapi
 
 logger = get_logger(__name__)
 
@@ -20,6 +22,23 @@ async def lifespan(app: FastAPI):
     """Lifespan events for the FastAPI application"""
     # Startup
     logger.info("Starting FastAPI Agentic Starter")
+
+    # Initialize observability
+    setup_metrics(service_name="fastapi-agentic-starter", service_version="1.0.0")
+
+    # Setup tracing (OTLP endpoint from env or console in debug)
+    otlp_endpoint = getattr(settings, "OTLP_ENDPOINT", None)
+    setup_tracing(
+        service_name="fastapi-agentic-starter",
+        service_version="1.0.0",
+        otlp_endpoint=otlp_endpoint,
+        console_export=settings.DEBUG,
+    )
+
+    # Instrument FastAPI app for tracing
+    instrument_fastapi(app)
+
+    logger.info("Observability initialized - Tracing and Metrics ready")
     yield
     # Shutdown
     logger.info("Shutting down FastAPI Agentic Starter")
@@ -50,8 +69,8 @@ def create_app() -> FastAPI:
     # Include API router
     app.include_router(api_router, prefix=settings.API_PREFIX)
 
-    # Register Middlewares
-
+    # Register Middlewares (order matters - last added is first executed)
+    app.add_middleware(ObservabilityMiddleware)
     app.add_middleware(ErrorHandlerMiddleware)
     app.add_middleware(APIKeyMiddleware)
     app.add_middleware(LoggingMiddleware)
