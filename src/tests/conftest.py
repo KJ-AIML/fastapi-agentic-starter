@@ -1,5 +1,12 @@
 from unittest.mock import AsyncMock, MagicMock, Mock
 import asyncio
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
